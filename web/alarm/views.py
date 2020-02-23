@@ -32,6 +32,13 @@ def save(request, alarm_id):
     return HttpResponseRedirect(reverse('index'))
 
 
+def delete(request, alarm_id):
+    alarm = get_object_or_404(Alarm, pk=alarm_id)
+    alarm.delete()
+    CoreInterfaceImpl.getInstance().remove(alarm)
+    return HttpResponseRedirect(reverse('index'))
+
+
 def new(request):
     alarm = Alarm()
     alarm.id = 0

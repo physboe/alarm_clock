@@ -2,6 +2,7 @@ import schedule
 import time
 import threading
 from .services_utils import RoutineInterface
+import logging
 
 
 class ScheduleServiceImpl(object):
@@ -54,11 +55,15 @@ class ScheduleServiceImpl(object):
     def removeJob(self, jobId):
         schedule.clear(jobId)
 
+
+class Runner(object):
+    logger = logging.getLogger('django')
+
     def __runLoop__(self):
         try:
             while True:
                 schedule.run_pending()
-                print(schedule.jobs)
+                self.logger.info(schedule.jobs)
                 time.sleep(1)
                 if(self.stopNow):
                     break
