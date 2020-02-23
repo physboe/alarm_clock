@@ -5,24 +5,23 @@ from HueServices import HueServiceImpl
 from ServicesUtils import RoutineInterface
 
 
-class AlarmScheduleServiceImpl(object):
-    ## SingleTon instance of Schedule Service. Initiate jobs, delete
+class ScheduleServiceImpl(object):
+
     __instance = None
 
     @staticmethod
     def getInstance():
-        if AlarmScheduleServiceImpl.__instance is None:
-            AlarmScheduleServiceImpl()
-        return AlarmScheduleServiceImpl.__instance
+        if ScheduleServiceImpl.__instance is None:
+            ScheduleServiceImpl()
+        return ScheduleServiceImpl.__instance
 
     def __init__(self):
-        if AlarmScheduleServiceImpl.__instance is not None:
+        if ScheduleServiceImpl.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
-            AlarmScheduleServiceImpl.__instance = self
+            ScheduleServiceImpl.__instance = self
 
-    #Things to define Schedule
-    WEEKDAYS = ("Mo","Di","Mi","Do","Fr","Sa","So")
+    WEEKDAYS = ("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
 
     def createWeekdayJob(self):
         return schedule.every()
@@ -56,7 +55,7 @@ class AlarmScheduleServiceImpl(object):
 
     def removeJob(self, jobId):
         pass
-        
+
     def __runLoop__(self):
         try:
             while True:
@@ -86,20 +85,19 @@ class RoutinesHandlerImpl(RoutineInterface):
 
 
 def main():
-    alarmService = AlarmScheduleServiceImpl.getInstance()
+    alarmService = ScheduleServiceImpl.getInstance()
     alarmService.run()
 
     job1 = alarmService.createWeekdayJob()
-    job1 = alarmService.onWeekDays(job1, "So")
+    job1 = alarmService.onWeekDays(job1, "Mo")
     job1 = alarmService.setTime(job1, "08", "50")
 
     job2 = alarmService.createEveryDayJob()
-    job2 = alarmService.setTime(job2, "12", "59")
+    job2 = alarmService.setTime(job2, "13", "07")
 
     hueService = HueServiceImpl.getInstance()
-    #job1 = alarmService.setRepeatAction(job1, 1, hueService.doRoutine, 10)
+#    job1 = alarmService.setRepeatAction(job1, 1, hueService.doRoutine, 10)
     job2 = alarmService.setRoutine(job2, hueService.doRoutine, jobId=1, transitionMins=1)
-#    job2 = alarmService.setRoutine(job2, RoutinesHandlerImpl().doRoutine, jobId=1, text=1)
 
 
 if __name__ == "__main__":
