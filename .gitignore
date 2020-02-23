@@ -1,5 +1,5 @@
 /alarm_clock_physbo.egg-info
-/alarm_clock_core/__pycache__
+/alarm_core/__pycache__
 /build
 /dist
-/alarm_clock_core/tests.py
+/alarm_core/tests.py
