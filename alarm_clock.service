@@ -3,7 +3,7 @@ Description=My service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 manage.py 0.0.0.0:8000
+ExecStart=/usr/bin/python3 -u manage.py 0.0.0.0:8000
 WorkingDirectory=/home/pi/Documents/alarm_clock/web
 StandardOutput=inherit
 StandardError=inherit
