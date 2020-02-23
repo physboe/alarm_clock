@@ -1,6 +1,6 @@
 import configparser
 
-class ConfigService:
+class ConfigServiceImpl:
 
     CONFIG_FILE = 'alarm_clock.ini'
 
@@ -8,15 +8,16 @@ class ConfigService:
     IP_OPTION = 'ip'
     USERNAME_OPTION = 'username'
 
-    def __init__(self, filename):
-        self.config = configparser.ConfigParser()
-        self.config.read(filename)
-
     def __init__(self):
-        self.__init__(self.CONFIG_FILE)
+        self.config = configparser.ConfigParser()
+        self.config.read(self.CONFIG_FILE)
 
     def getOption(self, section, option):
         try:
             return self.config.get(section, option)
         except Exception:
             return None
+
+    def setOption(self, section, option, value):
+        self.config.set(section, option, value)
+        self.config.write(self.CONFIG_FILE)
