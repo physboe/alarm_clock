@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponseRedirect
 from .models import Alarm
-from alarm_core.schedule_services import ScheduleServiceImpl
+from .core_interface import CoreInterfaceImpl
 
 
 def index(request):
@@ -28,12 +28,12 @@ def save(request, alarm_id):
     alarm.repeat = 'repeat' in request.POST
     alarm.weekdays = request.POST.get('weekdays', alarm.weekdays)
     alarm.save()
-    ScheduleServiceImpl.getInstance()
+    CoreInterfaceImpl.getInstance().put(alarm)
     return HttpResponseRedirect(reverse('index'))
 
 
 def new(request):
     alarm = Alarm()
     alarm.id = 0
-    alarm.name="New Alarm"
+    alarm.name = "New Alarm"
     return render(request, 'detail.html', {'alarm': alarm})

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from qhue import Bridge, QhueException, create_new_username
-from config_services import ConfigServiceImpl
-from services_utils import RoutineInterface
+from .config_services import ConfigServiceImpl
+from .services_utils import RoutineInterface
 
 
 class HueServiceImpl(RoutineInterface):

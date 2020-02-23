@@ -1,5 +1,6 @@
 import configparser
 
+
 class ConfigServiceImpl:
 
     CONFIG_FILE = 'alarm_clock.ini'
