@@ -63,7 +63,7 @@ class Runner(object):
         try:
             while True:
                 schedule.run_pending()
-                self.logger.info(schedule.jobs)
+                self.logger.debug(schedule.jobs)
                 time.sleep(1)
                 if(self.stopNow):
                     break
