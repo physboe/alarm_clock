@@ -2,12 +2,33 @@ import schedule
 import time
 import threading
 from HueServices import HueServiceImpl
+from ServicesUtils import RoutineInterface
 
-class AlarmScheduleServiceImpl:
+
+class AlarmScheduleServiceImpl(object):
+    ## SingleTon instance of Schedule Service. Initiate jobs, delete
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if AlarmScheduleServiceImpl.__instance is None:
+            AlarmScheduleServiceImpl()
+        return AlarmScheduleServiceImpl.__instance
+
+    def __init__(self):
+        if AlarmScheduleServiceImpl.__instance is not None:
+            raise Exception("This class is a singleton!")
+        else:
+            AlarmScheduleServiceImpl.__instance = self
+
+    #Things to define Schedule
     WEEKDAYS = ("Mo","Di","Mi","Do","Fr","Sa","So")
 
-    def createJob(self):
+    def createWeekdayJob(self):
         return schedule.every()
+
+    def createEveryDayJob(self):
+        return schedule.every(1).day
 
     def onWeekDays(self, job, *weekdays):
         for weekday in weekdays:
@@ -30,9 +51,12 @@ class AlarmScheduleServiceImpl:
     def setTime(self, job, hour, min):
         return job.at(hour + ":" + min)
 
-    def setAction(self, job, jobId, func, mins):
-        return job.do(func, mins).tag(jobId)
+    def setRoutine(self, job, func, **args):
+        return job.do(func, args).tag(args['jobId'])
 
+    def removeJob(self, jobId):
+        pass
+        
     def __runLoop__(self):
         try:
             while True:
@@ -55,17 +79,28 @@ class AlarmScheduleServiceImpl:
         self.runThread.join()
 
 
+class RoutinesHandlerImpl(RoutineInterface):
+
+    def doRoutine(self, args):
+        print(args['text'])
+
 
 def main():
-    alarmService = AlarmScheduleServiceImpl()
+    alarmService = AlarmScheduleServiceImpl.getInstance()
     alarmService.run()
 
-    job1 = alarmService.createJob()
+    job1 = alarmService.createWeekdayJob()
     job1 = alarmService.onWeekDays(job1, "So")
     job1 = alarmService.setTime(job1, "08", "50")
 
-    hueService = HueServiceImpl()
-    job1 = alarmService.setAction(job1, 1, hueService.doRoutine, 10)
+    job2 = alarmService.createEveryDayJob()
+    job2 = alarmService.setTime(job2, "12", "59")
+
+    hueService = HueServiceImpl.getInstance()
+    #job1 = alarmService.setRepeatAction(job1, 1, hueService.doRoutine, 10)
+    job2 = alarmService.setRoutine(job2, hueService.doRoutine, jobId=1, transitionMins=1)
+#    job2 = alarmService.setRoutine(job2, RoutinesHandlerImpl().doRoutine, jobId=1, text=1)
+
 
 if __name__ == "__main__":
     main()

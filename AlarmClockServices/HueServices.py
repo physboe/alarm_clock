@@ -1,16 +1,32 @@
 #!/usr/bin/env python
 from qhue import Bridge, QhueException, create_new_username
 from ConfigServices import ConfigServiceImpl
-import configparser
+from ServicesUtils import RoutineInterface
 
-class HueServiceImpl:
+
+class HueServiceImpl(RoutineInterface):
 
     CONFIG_FILE_PATH = 'alarm_clock.ini'
     SECTION_NAME = 'hue'
     IP_OPTION_NAME = 'ip'
     USERNAME_OPTION_NAME = 'username'
 
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if HueServiceImpl.__instance == None:
+            HueServiceImpl()
+        return HueServiceImpl.__instance
+
     def __init__(self):
+        if HueServiceImpl.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            self.__config()
+            HueServiceImpl.__instance = self
+
+    def __config(self):
         config = ConfigServiceImpl()
         ip = config.getOption(ConfigServiceImpl.HUE_SECTION, ConfigServiceImpl.IP_OPTION)
         username = config.getOption(ConfigServiceImpl.HUE_SECTION, ConfigServiceImpl.USERNAME_OPTION)
@@ -30,16 +46,16 @@ class HueServiceImpl:
                 print("Error occurred while creating a new username: {}".format(err))
         return username
 
-    def doRoutine(self, transitionMins):
-        transitionTime = transitionMins * 600
+    def doRoutine(self, args):
+        transitionTime = args['transitionMins'] * 600
         self.bridge.groups(1, 'action', on=True, bri=1, sat=254)
         self.bridge.groups(1, 'action', bri=254, sat=0, transitiontime=int(transitionTime))
 
 
-
 def main():
     hueService = HueServiceImpl()
-    hueService.doRoutine(10)
+    hueService.doRoutine(transitionMins=10)
+
 
 if __name__ == "__main__":
     main()
