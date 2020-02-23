@@ -16,7 +16,11 @@ def detail(request, alarm_id):
 
 
 def save(request, alarm_id):
-    alarm = get_object_or_404(Alarm, pk=alarm_id)
+    try:
+        alarm = Alarm.objects.get(pk=alarm_id)
+    except Alarm.DoesNotExist:
+        alarm = Alarm()
+
     alarm.name = request.POST.get('name', alarm.name)
     alarm.time = request.POST.get('time', alarm.time)
     alarm.isOn = 'isOn' in request.POST
@@ -27,8 +31,7 @@ def save(request, alarm_id):
 
 
 def new(request):
-    return HttpResponse("new")
-
-
-def savenew(request):
-    return HttpResponse("savenew")
+    alarm = Alarm()
+    alarm.id = 0
+    alarm.name="New Alarm"
+    return render(request, 'detail.html', {'alarm': alarm})

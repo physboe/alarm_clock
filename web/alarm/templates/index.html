@@ -1,9 +1,18 @@
+<h1>Overview</h1>
 {% if alarms %}
     <ul>
     {% for alarm in alarms %}
-        <li><a href="{% url 'detail' alarm.id %}">{{ alarm.name }} - {{alarm.time}} - {{alarm.weekdays}}</a></li>
+        <li><a href="{% url 'detail' alarm.id %}" {% if alarm.isOn %}class='active'{% endif %}>{{ alarm.name }} - {{alarm.time}} - {{alarm.weekdays}}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No alarms are available.</p>
 {% endif %}
+
+<a href="{% url 'new' %}">New</a>
+
+<style>
+.active {
+  color: green;
+}
+</style>
