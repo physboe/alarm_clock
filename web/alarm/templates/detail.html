@@ -4,8 +4,92 @@
 <form action="{% url 'save' alarm.id %}" method="post">
   {% csrf_token %}
   <label for="name">Name</label>
-  <input type="text" id="name" name="name" value="{{alarm.name}}"/>
+  <input type="text" id="name" name="name" value="{{alarm.name}}"/><br/>
   <label for="time">Time</label>
-  <input type="time" id="time" name="time" value="{{alarm.time}}"/>
+  <input type="time" id="time" name="time" value="{{alarm.time}}"/><br/>
+  <label for="isOn">On</label>
+  <input type="checkbox" id="isOn" name="isOn" {% if alarm.isOn %}checked="checked"{% endif %}/><br/>
+  <br/>
+  <label for="repeat">Repeat</label>
+  <input type="checkbox" id="repeat" name="repeat" {% if alarm.repeat %}checked="checked"{% endif %} onchange="toggleRepeat()"/><br/>
+
+  <input type="checkbox" id="Mon" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Mon">Monday</label>
+
+  <input type="checkbox" id="Tue" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Tue">Tuesday</label>
+
+  <input type="checkbox" id="Wed" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Wed">Wednesday</label>
+
+  <input type="checkbox" id="Thu" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Thu">Thursday</label>
+
+  <input type="checkbox" id="Fri" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Fri">Friday</label>
+
+  <input type="checkbox" id="Sat" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Sat">Saturday</label>
+
+  <input type="checkbox" id="Sun" class="weekdays" onchange="weekdaysUpdate()"/>
+  <label for="Sun">Sunday</label>
+
+  <input type="hidden" id="weekdays" name="weekdays" value={{alarm.weekdays}}/><br/><br/>
   <input type="submit" value="Save">
 </form>
+
+<script>
+  function weekdaysUpdate(){
+    value = "";
+    weekdaysCheck = document.getElementsByClassName("weekdays");
+    for(var i = 0; i < weekdaysCheck.length; i ++){
+      check = weekdaysCheck[i];
+      if(check.checked){
+        value += check.id + ",";
+      }
+    }
+    weekday_input = document.getElementById("weekdays");
+    weekday_input.setAttribute("value", value);
+  }
+
+  function initWeekdayChecks(){
+    weekday_input = document.getElementById("weekdays");
+    split = weekday_input.value.split(',');
+    for(i = 0; i < split.length; i ++){
+      if(split[i].length >= 3){
+        check = document.getElementById(split[i].substr(0,3));
+        check.checked = true;
+      }
+    }
+  }
+
+  function voidWeekDays(){
+    weekdaysCheck = document.getElementsByClassName("weekdays");
+    for(var i = 0; i < weekdaysCheck.length; i ++){
+      check = weekdaysCheck[i];
+      check.checked = false;
+    }
+  }
+
+  function toggleRepeat(){
+    checked = document.getElementById("repeat").checked;
+
+    weekdaysCheck = document.getElementsByClassName("weekdays");
+    for(var i = 0; i < weekdaysCheck.length; i ++){
+      check = weekdaysCheck[i];
+      check.disabled=!checked;
+    }
+    if(!checked){
+      document.getElementById("weekdays").setAttribute("value", "");
+      voidWeekDays();
+    }
+
+  }
+
+  window.onload = function(){
+    initWeekdayChecks();
+    toggleRepeat();
+  };
+
+
+</script>

@@ -18,7 +18,10 @@ def detail(request, alarm_id):
 def save(request, alarm_id):
     alarm = get_object_or_404(Alarm, pk=alarm_id)
     alarm.name = request.POST.get('name', alarm.name)
-    alarm.time = request.POST.get('time', alarm.name)
+    alarm.time = request.POST.get('time', alarm.time)
+    alarm.isOn = 'isOn' in request.POST
+    alarm.repeat = 'repeat' in request.POST
+    alarm.weekdays = request.POST.get('weekdays', alarm.weekdays)
     alarm.save()
     return HttpResponseRedirect(reverse('index'))
 

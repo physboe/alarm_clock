@@ -16,4 +16,4 @@ class Alarm(models.Model):
     isOn = models.BooleanField()
     time = models.CharField(max_length=25)
     repeat = models.BooleanField()
-    weekdays = models.CharField(max_length=27)
+    weekdays = models.CharField(max_length=28)
