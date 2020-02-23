@@ -1,8 +1,8 @@
 import schedule
 import time
 import threading
-from HueServices import HueServiceImpl
-from ServicesUtils import RoutineInterface
+from hue_services import HueServiceImpl
+from services_utils import RoutineInterface
 
 
 class ScheduleServiceImpl(object):
@@ -93,7 +93,7 @@ def main():
     job1 = alarmService.setTime(job1, "08", "50")
 
     job2 = alarmService.createEveryDayJob()
-    job2 = alarmService.setTime(job2, "13", "07")
+    job2 = alarmService.setTime(job2, "18", "51")
 
     hueService = HueServiceImpl.getInstance()
 #    job1 = alarmService.setRepeatAction(job1, 1, hueService.doRoutine, 10)
