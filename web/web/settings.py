@@ -25,7 +25,7 @@ SECRET_KEY = 'snpo_$3ht-yhddv@hk=!aw8z3&!arw&)9dkc$g^knoz2d%o4pw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.156', 'raspberrypi', "127.0.0.1"]
 
 
 # Application definition
