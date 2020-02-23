@@ -1,0 +1,11 @@
+<h1>{{ alarm.name }}</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'save' alarm.id %}" method="post">
+  {% csrf_token %}
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" value="{{alarm.name}}"/>
+  <label for="time">Time</label>
+  <input type="time" id="time" name="time" value="{{alarm.time}}"/>
+  <input type="submit" value="Save">
+</form>
